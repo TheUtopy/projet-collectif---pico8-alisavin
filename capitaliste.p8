@@ -5,17 +5,29 @@ __lua__
 
 function _init()
 	create_player()
+	init_msg()
+	init_asw()
+	create_msg("nom pnj","bonjour"
+	,"kill them all")
+	create_asw("bidon","oui : ➡️"
+	,"non : ⬅️","je ne sais pas :⬆️")
 end
 
 function _update()
-	player_movement()
+	if not messages[1] then
+		player_movement()
+	end
 	update_camera()
+	update_msg()
+	update_asw()
 end
 
 function _draw()
 	draw_map()
 	draw_player()
 	draw_ui()
+	draw_msg()
+	draw_asw()
 end
 -->8
 --map
@@ -90,6 +102,68 @@ function print_outline(text,x,y)
 	print(text,x,y-1,0)
 	print(text,x,y+1,0)
 	print(text,x,y,7)
+end
+-->8
+--messages
+
+function init_msg()
+	messages={}
+end
+
+function init_asw()
+	answers={}
+end
+
+
+function create_msg(name,...)
+	msg_title=name
+	messages={...}
+end
+
+function create_asw(name,...)
+	asw_title=name
+	answers={...}
+end
+
+function update_msg()
+	if (btn(❎)) then
+		deli(messages,1)
+	end
+end
+
+function update_asw()
+	
+end
+
+function draw_msg()
+	if messages[1] then
+		local y=40
+		local x=4
+		rectfill (x,y,120,y+35,0)
+		rect (x-2,y-2,122,y+37,0)
+		print(msg_title,x+6,y+2,8)
+		print(messages[1],x+2,y+10,7)
+	end
+end
+
+function draw_asw()
+	if answers[1] then
+		local y=82
+		local x=4
+		rectfill (x,y,120,y+35,0)
+		rect (x-2,y-2,122,y+37,9)
+		print("camille",x+6,y+2,3)
+		print(answers[1],x+2,y+10,7)
+		if answers[2] then
+			print(answers[2],x+2,y+18,7)
+			if answers[3] then
+					print(answers[3],x+2,y+26,7)
+				//if answer[4] then
+					//print(answers[4],x+2,y+34,7)
+				//end
+			end
+		end
+	end
 end
 __gfx__
 00000000022222204444444444444444444444444443343400000000000000000000000000000000000000000000000000000000000000000000000000000000
