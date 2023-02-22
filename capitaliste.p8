@@ -41,7 +41,7 @@ function create_player()
 	p={x=6,y=4,
 	   sprite=1,
 	   dettes=124523,
-	   vies=3,
+	   health=3,
 	   name="camille"}
 end
 
@@ -70,6 +70,10 @@ end
 function draw_player()
 	spr(p.sprite,p.x*8,p.y*8)
 end
+
+function player_lose_health()
+	p.health-=1
+end
 -->8
 --ui
 
@@ -82,7 +86,7 @@ function draw_ui()
  palt(0,true)
  palt(1,false)
 	print_outline("dettes:"..p.dettes,10,3)
-	for i=p.vies,1,-1 do
+	for i=p.health,1,-1 do
 		spr(65,2+(i-1)*9,10)
 	end
 end
