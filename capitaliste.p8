@@ -68,17 +68,6 @@ function player_movement()
 	interact(newx,newy)
 end
 
-function interact(x,y)
-	if not check_flag(0,
-																			newx,
-																			newy) then
-		p.x=newx
-		p.y=newy
-		if (p.x<0) p.x=0
-		if (p.y<0) p.y=0
-	end
-end
-
 function draw_player()
 	spr(p.sprite,p.x*8,p.y*8)
 end
@@ -170,6 +159,19 @@ function draw_asw()
 				//end
 			end
 		end
+	end
+end
+-->8
+--interact
+
+function interact(x,y)
+	if not check_flag(0,
+																			newx,
+																			newy) then
+		p.x=newx
+		p.y=newy
+		if (p.x<0) p.x=0
+		if (p.y<0) p.y=0
 	end
 end
 __gfx__
