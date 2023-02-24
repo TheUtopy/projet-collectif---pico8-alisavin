@@ -12,6 +12,7 @@ function _init()
 	//,"kill them all")
 	//create_asw("bidon","oui : ➡️"
 	//,"non : ⬅️","je ne sais pas :⬆️")
+	win=false
 end
 
 function _update()
@@ -21,6 +22,7 @@ function _update()
 	update_camera()
 	update_msg()
 	update_asw()
+	_win()
 end
 
 function _draw()
@@ -95,6 +97,13 @@ function print_outline(text,x,y)
 	print(text,x,y-1,0)
 	print(text,x,y+1,0)
 	print(text,x,y,7)
+end
+
+function _win(x,y)
+	if (win) then
+		p.x=114
+		p.y=23
+	end
 end
 -->8
 --messages
