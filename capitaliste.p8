@@ -8,10 +8,9 @@ function _init()
 	init_msg()
 	init_asw()
 	play_main_music()
-	//create_msg("nom pnj","bonjour"
-	//,"kill them all")
-	//create_asw("bidon","oui : ➡️"
-	//,"non : ⬅️","je ne sais pas :⬆️")
+	init_pnj_id()
+	create_pnj1()
+	win=false
 end
 
 function _update()
@@ -21,6 +20,7 @@ function _update()
 	update_camera()
 	update_msg()
 	update_asw()
+	_win()
 end
 
 function _draw()
@@ -51,9 +51,9 @@ end
 --player
 
 function create_player()
-	p={x=4,y=6,
-				sprite=39,
-	   dettes=124523,
+	p={x=6,y=4,
+	   sprite=1,
+	   dettes=-3520,
 	   vies=3,
 	   name="camille"}
 end
@@ -108,6 +108,14 @@ function print_outline(text,x,y)
 	print(text,x,y+1,0)
 	print(text,x,y,7)
 end
+
+function _win(x,y)
+	if (win) then
+		p.x=118
+		p.y=30
+		p.dettes=0
+	end
+end
 -->8
 --messages
 
@@ -115,29 +123,17 @@ function init_msg()
 	messages={}
 end
 
-function init_asw()
-	answers={}
-end
-
-
 function create_msg(name,...)
 	msg_title=name
 	messages={...}
 end
 
-function create_asw(name,...)
-	asw_title=name
-	answers={...}
-end
-
 function update_msg()
-	if (btn(❎)) then
+	if (btnp(❎)) and #messages>1 then
 		deli(messages,1)
+	elseif #messages==1 then
+		answer_to_pnj(pnj_id)
 	end
-end
-
-function update_asw()
-	
 end
 
 function draw_msg()
@@ -151,21 +147,49 @@ function draw_msg()
 	end
 end
 
+function init_asw()
+	answers={}
+end
+
+function create_asw(...)
+	answers={...}
+end
+
+function update_asw()
+	if btnp(⬆️) and #answers>=0 then
+		deli(messages,1)
+		answers={}
+		answer_consequence(1)
+	elseif btnp(⬅️) and #answers>1 then
+		deli(messages,1)
+		answers={}
+		answer_consequence(2)
+	elseif btnp(⬇️) and #answers>2 then
+		deli(messages,1)
+		answers={}
+		answer_consequence(3)
+	elseif btnp(➡️) and #answers>3 then
+		deli(messages,1)
+		answers={}
+		answer_consequence(4)
+	end
+end
+
 function draw_asw()
 	if answers[1] then
 		local y=82
 		local x=4
-		rectfill (x,y,120,y+35,0)
-		rect (x-2,y-2,122,y+37,9)
+		rectfill (x,y,120,y+40,0)
+		rect (x-2,y-2,122,y+42,9)
 		print("camille",x+6,y+2,3)
-		print(answers[1],x+2,y+10,7)
+		print("⬆️ "..answers[1],x+2,y+10,7)
 		if answers[2] then
-			print(answers[2],x+2,y+18,7)
+			print("⬅️ "..answers[2],x+2,y+18,7)
 			if answers[3] then
-					print(answers[3],x+2,y+26,7)
-				//if answer[4] then
-					//print(answers[4],x+2,y+34,7)
-				//end
+					print("⬇️ "..answers[3],x+2,y+26,7)
+				if answers[4] then
+					print("➡️ "..answers[4],x+2,y+34,7)
+				end
 			end
 		end
 	end
@@ -182,16 +206,89 @@ function interact(x,y)
 		if (p.x<0) p.x=0
 		if (p.y<0) p.y=0
 	end
+	if check_flag(1,
+															newx,
+															newy) then
+		interact_with_pnj(newx,newy)
+		
+	 
+	end
+end
+
+function interact_with_pnj(x,y)
+	if x==c1.x and y==c1.y then
+  pnj_id=1
+  if c1.argent_recu>=500 then
+  	create_msg("bob","merci bien !")
+	 elseif c1.deja_parle==0 then
+	 	create_msg("bob","salut",c1.argent_recu,"tu as une petite piece ?")
+		elseif c1.deja_parle>0 and
+		c1.argent_recu<500 then
+			create_msg("bob","c'est pas mal ...","une autre peut-etre ?")
+		end
+	end
+	if newx==9 and newy==9 then
+	 create_msg("crs","edrfth")
+	end
 end
 -->8
 --music
 function play_main_music()
-	for i=0,10 do
-		sfx(1)
-		sfx(2)
-		sfx(3)
-		
+	music(0)
+end
+-->8
+--pnj
+
+function init_pnj_id()
+	pnj_id=0
+end
+
+function create_pnj1()
+	c1={x=14,y=6,
+	    deja_parle=0,
+	    argent_recu=0}  
+end
+
+function answer_to_pnj(pnj_id)
+	if pnj_id==1 then
+		if c1.argent_recu<500 then
+	 	create_asw("donner 1","donner 10","donner 50","donner 500")
+		else
+			create_asw("au revoir")
+		end
 	end
+	
+	
+end
+
+function answer_consequence(n)
+	if pnj_id==1 then
+		c1.deja_parle=1
+		if c1.argent_recu<500 then
+			if n==1 then
+				c1.argent_recu+=1
+			 p.dettes-=1
+				interact_with_pnj(newx,newy)
+			elseif n==2 then
+				c1.argent_recu+=10
+				p.dettes-=10
+				interact_with_pnj(newx,newy)
+			elseif n==3 then
+				c1.argent_recu+=50
+				p.dettes-=50
+				interact_with_pnj(newx,newy)
+			elseif n==4 then
+				c1.argent_recu+=500
+				p.dettes-=500
+				interact_with_pnj(newx,newy)
+			end
+		else
+	 	p.x=22
+	 	p.y=4
+		end
+	end
+	
+	
 end
 __gfx__
 00000000022222204444444444444444444444444443343444444444444444444444444400000000000000000000000000000000000000000000000000000000
@@ -258,8 +355,14 @@ __gfx__
 33344333bb3b3bb33dddd3d3344bbbb31c1c77cc9999933300000000000000000000000000000000000000000000000000000000000000000000000000000000
 333443333bbbbb333d6d63d334bb3bb311cccccc9439433300000000000000000000000000000000000000000000000000000000000000000000000000000000
 33344333333b33333d6d63dd33b43b43c11ccccc9439433300000000000000000000000000000000000000000000000000000000000000000000000000000000
+30303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030
+30303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303005050505050505150505562525252525
+30303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030
+30303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303000000000000000000000000000000000
+30303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030
+30303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303000000000000000000000000000000000
 __gff__
-0000000001010103010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0000000001010103010000000000000000000000000000000000000000000000000000000000000000000000030003000300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __map__
 0408040404080408030308030303040326262626263226262626262626262626000303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303
