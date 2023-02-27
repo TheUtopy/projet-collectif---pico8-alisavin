@@ -218,10 +218,13 @@ end
 function interact_with_pnj(x,y)
 	if x==c1.x and y==c1.y then
   pnj_id=1
+  --fin qd joueur donne 500
   if c1.argent_recu>=500 then
   	create_msg("bob","merci bien !")
 	 elseif c1.deja_parle==0 then
-	 	create_msg("bob","salut",c1.argent_recu,"tu as une petite piece ?")
+	 	create_msg("bob","salut",
+	 	"psssst eh toi! \ntu veux essafcer ta dette ?",
+	 	"hahaha pas moyen, \nfaut tout bruler !",c1.argent_recu,"tu as une petite piece ?")
 		elseif c1.deja_parle>0 and
 		c1.argent_recu<500 then
 			create_msg("bob","c'est pas mal ...","une autre peut-etre ?")
