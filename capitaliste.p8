@@ -238,11 +238,15 @@ function create_pnj1()
 end
 
 function answer_to_pnj(pnj_id)
-	if pnj_id==1 and c1.argent_recu<500 then
-	 create_asw("donner 1","donner 10","donner 50","donner 500")
-	else
-		create_asw("au revoir")
+	if pnj_id==1 then
+		if c1.argent_recu<500 then
+	 	create_asw("donner 1","donner 10","donner 50","donner 500")
+		else
+			create_asw("au revoir")
+		end
 	end
+	
+	
 end
 
 function answer_consequence(n)
@@ -271,6 +275,8 @@ function answer_consequence(n)
 	 	p.y=4
 		end
 	end
+	
+	
 end
 __gfx__
 00000000022222204444444444444444444444444443343444444444444444444444444400000000000000000000000000000000000000000000000000000000
