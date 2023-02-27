@@ -21,6 +21,7 @@ function _update()
 	update_msg()
 	update_asw()
 	_win()
+	mort()
 end
 
 function _draw()
@@ -83,6 +84,16 @@ end
 
 function draw_player()
 	spr(p.sprite,p.x*8,p.y*8)
+end
+
+function mort()
+	if p.vies==0 then
+		p.x=6
+		p.y=4
+		p.vies=3
+		p.dettes-=99
+		create_msg("clinique st pierre","oups, passage \npar la case hopital\nvous payez 99")
+	end
 end
 -->8
 --ui
@@ -212,17 +223,24 @@ function interact(x,y)
 		interact_with_pnj(newx,newy)
 		
 	 
+	elseif check_flag(2,newx,newy) then
+		p.vies-=1
 	end
 end
 
 function interact_with_pnj(x,y)
 	if x==c1.x and y==c1.y then
   pnj_id=1
+  --fin qd joueur donne 500
   if c1.argent_recu>=500 then
   	create_msg("bob","merci bien !")
 	 elseif c1.deja_parle==0 then
-	 	create_msg("bob","bonjour brave gens\n","tu as une petite piece ?")
-		elseif c1.deja_parle>0 then
+	 	create_msg("bob",
+	 	"psssst ! eh toi!", "t'as vu ta dette ? \nen haut a gauche \ntu veux l'effacer ?",
+	 	"hahahahahahah ! haha ! \npas moyen ! \nfaut tout bruler !", 
+		"he ! pars pas, \nj'ai un autre conseil !","les cactus : ca pique !","allez ! \nmaintenant que je t'ai aide\ntu as une petite piece ?")
+		elseif c1.deja_parle>0 and
+		c1.argent_recu<500 then
 			create_msg("bob","c'est pas mal ...","une autre peut-etre ?")
 		end
 	end
