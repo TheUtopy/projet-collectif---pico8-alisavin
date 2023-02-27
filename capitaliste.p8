@@ -209,7 +209,7 @@ function interact_with_pnj(x,y)
   if c1.argent_recu>=500 then
   	create_msg("bob","merci bien !")
 	 elseif c1.deja_parle==0 then
-	 	create_msg("bob","salut","tu as une petite piece ?")
+	 	create_msg("bob","bonjour brave gens\n","tu as une petite piece ?")
 		elseif c1.deja_parle>0 then
 			create_msg("bob","c'est pas mal ...","une autre peut-etre ?")
 		end
