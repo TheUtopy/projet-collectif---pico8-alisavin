@@ -12,6 +12,7 @@ function _init()
 	create_pnj2()
 	pnj_id=0
 	win=false
+	create_cochon()
 	cochon=false
 end
 
@@ -55,7 +56,7 @@ end
 --player
 
 function create_player()
-	p={x=26,y=12,
+	p={x=4,y=6,
 	   sprite=39,
 	   dettes=-3520,
 	   vies=3,
@@ -322,7 +323,7 @@ function answer_consequence(n)
 		end
 	end
 	if pnj_id==2 then
-		c1.deja_parle=1
+		c2.deja_parle=1
 			if n==1 then
 			 p.dettes-=50
 				interact_with_pnj(newx,newy)
@@ -341,11 +342,20 @@ function answer_consequence(n)
 	end
 end
 
+function create_cochon()
+	co={x=28,y=11,
+	   sprite=103,
+	   name="patrick le cochon"}
+end
+
 function draw_cochon()
 	if (cochon==true) then
-		spr(103,c2.x*8,c2.y*8)
+	spr(co.sprite,co.x+70,co.y+77)
 	end
 end
+
+
+
 __gfx__
 000000000222222044444444444444444444444444433434444444444444444444444444666666666666666666664466656aaa66666665556666666600000000
 0000000002ffff204444444444444444444444444443343444777744444444444444444466666666666666666664646665aaaaa666a666555666aa6600000000
