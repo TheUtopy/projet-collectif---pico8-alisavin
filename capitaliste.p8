@@ -16,7 +16,9 @@ end
 
 function _update()
 	if not messages[1] then
-		player_movement()
+		if c3.deja_parle==0 or c3.deja_parle==4 then
+ 		player_movement()
+ 	end
 	end
 	update_camera()
 	update_msg()
@@ -33,11 +35,11 @@ function _draw()
 	draw_player()
 	draw_ui()
 	draw_cochon()
-	draw_msg()
-	draw_asw()
 	if c3.deja_parle==1 then
 		draw_crs()
 	end
+	draw_msg()
+	draw_asw()
 end
 
 function init_variables()
@@ -224,7 +226,9 @@ function draw_asw()
 		print("camille",x+6,y+2,3)
 		print("⬆️ "..answers[1],x+2,y+10,7)
 		if answers[2] then
+		 if answers[2]!="" then
 			print("⬅️ "..answers[2],x+2,y+18,7)
+			end
 			if answers[3] then
 					print("⬇️ "..answers[3],x+2,y+26,7)
 				if answers[4] then
@@ -303,7 +307,16 @@ function interact_with_pnj(x,y)
 	if x==c3.x and y==c3.y then
 		pnj_id=3
 		if c3.deja_parle==0 then 
-		 create_msg(c3.name,"oh non ! saperlipopette !\nun de mes jets prives\nest en feu !","c'est qui l'enfoire\nqui l'a brule,\nque je le crible de dette !","* il vous remarque *","vous ! la !\nqu'est-ce que vous \nfaites ici ?!","c'est mon aeroport\nprive ici !\nvous n'avez rien a faire la !\nvous etes suspect!","a moi la garde !")
+		 create_msg(c3.name,"oh non ! saperlipopette !\nun de mes jets prives\nest en feu !",
+		 "c'est qui l'enfoire\nqui l'a brule,\nque je le crible de dettes !","* il vous remarque *",
+		 "vous ! la !\nqu'est-ce que vous \nfaites ici ?!","c'est mon aeroport prive !\nvous n'avez rien a faire la !\nvous etes suspect!",
+		 "garde !\nfaites quelque chose !\non ne vous paie pas \na rien faire !")
+		elseif c3.deja_parle==2 then
+			create_msg(crs.name,"dans ta gueule, \nsale activiste !","* donne un coup de matraque *\n\n* vous perdez un pv *")
+		elseif c3.deja_parle==3 then
+			create_msg(c3.name,"bien fait pour ta gueule !","maintenant embarque moi ca !")
+	 elseif c3.deja_parle==4 then
+	 	create_msg(c3.name,"maintenant embarque moi ca !")
 	 end
 	end
 end
@@ -369,7 +382,13 @@ function answer_to_pnj(pnj_id)
 
 --pnj 3
 	if pnj_id==3 then
-
+		if c3.deja_parle==2 then
+			create_asw("aie")
+		elseif c3.deja_parle==3 then
+		 create_asw("je ne me laisserais \n   pas faire !")
+		elseif c3.deja_parle==4 then
+		 create_asw("leur balancer un \n   cocktail molotov","","s'enfuir")
+		end
 	end
 end
 
@@ -428,6 +447,24 @@ function answer_consequence(n)
 
 --pnj 3
 	if pnj_id==3 then
+		if c3.deja_parle==2 then
+			if n==1 then
+				perte_pv()
+				c3.deja_parle=3
+				interact_with_pnj(newx,newy)
+			end
+		elseif c3.deja_parle==3 then
+			c3.deja_parle=4
+			interact_with_pnj(newx,newy)
+		elseif c3.deja_parle==4 then
+			if n==1 then
+				p.x=60
+				p.y=10
+			elseif n==3 then
+				p.x=60
+				p.y=10
+			end
+		end
 	end
 end
 
@@ -447,7 +484,7 @@ end
 --crs !!!!
 function create_crs()
 	crs={x=47,y=8,
-						speed=0.5,
+						speed=0.8,
 	     sprite=17,
 	     name="jacques le crs"}
 end
@@ -456,6 +493,9 @@ end
 function update_crs()
 	if crs.x>8 then
 		crs.x-=crs.speed
+	else
+		c3.deja_parle=2
+		interact_with_pnj(newx,newy)
 	end
 end
 
