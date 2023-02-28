@@ -237,6 +237,7 @@ function interact(x,y)
 end
 
 function interact_with_pnj(x,y)
+
 --intercation avec pnj1
 	if x==c1.x and y==c1.y then
   pnj_id=1
@@ -253,12 +254,24 @@ function interact_with_pnj(x,y)
 			create_msg("bob","c'est pas mal ...","une autre peut-etre ?")
 		end
 	end
+	
 	--intercation avec pnj2 level2
 	if x==c2.x and y==c2.y then
   pnj_id=2
+  if c2.deja_parle==0 then
   create_msg("patrick le banquier",
   "bonjour,","voulez-vous contracter \nun pret ?",
-  "seulement 10% d'interets")  
+  "seulement 10% d'interets") 
+		elseif c2.deja_parle==1 then
+			create_msg("patrick le banquier",
+			"re-bonjour camille",
+			"toujours des dettes ?", 
+			"un petit pret au\ntarif avantageux\nde 10% d'interet")		
+		elseif c2.deja_parle==2 then
+			create_msg("patrick le cochon",
+			"gron gron quiiiick\nquick",
+			"groin groin kik ?")
+		end
 	end
 end
 -->8
@@ -289,10 +302,17 @@ function answer_to_pnj(pnj_id)
 			create_asw("au revoir")
 		end
 	end
-	if pnj_id==2 then
-		create_asw("emprunter 500 (-50)","emprunter 1000 (-100)",
-		"emprunter 1500 (-150)",
-		"changer en cochon (+950)")
+	if pnj_id==2 then 
+		if c2.deja_parle<2 then
+			create_asw("emprunter 500 (-50)","emprunter 1000 (-100)",
+			"emprunter 1500 (-150)",
+			"changer en cochon")
+		else
+		create_asw("il veut un pret patrick ?",
+			"petit, petit petit",
+			"lui donner des glands",
+			"le prendre dans notre sac")  
+		end	
 	end
 end
 
@@ -323,22 +343,26 @@ function answer_consequence(n)
 		end
 	end
 	if pnj_id==2 then
-		c2.deja_parle=1
+		if c2.deja_parle != 2 then
 			if n==1 then
 			 p.dettes-=50
-				interact_with_pnj(newx,newy)
+				c2.deja_parle=1
 			elseif n==2 then
 				p.dettes-=100
-				interact_with_pnj(newx,newy)
+				c2.deja_parle=1
 			elseif n==3 then
 				p.dettes-=150
-				interact_with_pnj(newx,newy)
+				c2.deja_parle=1
 			elseif n==4 then
 				p.dettes+=950
 				cochon=true
-				interact_with_pnj(newx,newy)
+				c2.deja_parle=2
 			end
-		
+		else 
+			p.x=35
+	 	p.y=12
+	 	cochon=false
+	 end
 	end
 end
 
