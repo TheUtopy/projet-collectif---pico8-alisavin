@@ -68,7 +68,7 @@ end
 --player
 
 function create_player()
-	p={x=40,y=11,
+	p={x=6,y=4,
 	   sprite=39,
 	   dettes=-3520,
 	   vies=3,
@@ -319,6 +319,7 @@ function interact_with_pnj(x,y)
 	 	create_msg(c3.name,"maintenant embarque moi ca !")
 	 end
 	end
+	
 end
 -->8
 --music
