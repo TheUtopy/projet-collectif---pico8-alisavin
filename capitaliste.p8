@@ -8,8 +8,8 @@ function _init()
 	init_variables()
 	init_msg()
 	init_asw()
+	play_main_music()
 	create_pnj()
-	play_main_music(0)
 	create_cochon()
 	create_crs()
 end
@@ -20,7 +20,6 @@ function _update()
  		player_movement()
  	end
 	end
-	change_music()
 	update_camera()
 	update_msg()
 	update_asw()
@@ -46,8 +45,7 @@ end
 function init_variables()
 	pnj_id=0
 	win=false
-	cochon=false
-	music_played=0	
+	cochon=false	
 end
 -->8
 --map
@@ -148,6 +146,7 @@ function _win(x,y)
 	if (win) then
 		p.x=118
 		p.y=30
+		p.sprite=39
 		p.dettes=0
 	end
 end
@@ -327,20 +326,17 @@ function interact_with_pnj(x,y)
 		pnj_id=4
 		if c4.deja_parle==0 then 
 		 create_msg(c4.name,"qui etes vous ?","je ne reponds pas \naux journalistes \nislamo-gauchiste, \ncirculez !")
+		elseif c4.deja_parle==1 then
+			create_msg(c4.name,"hahahahahaha","degage prolo",
+			"ou tu vas finir \ncomme les poissons",
+			"hahahahahaha \nhah haha (cof cof)\n*tousse*")
 		end
 	end
 end
 -->8
 --music
-function play_main_music(x)
-	 music(x)
-end
-
-function change_music()
-	if c3.deja_parle==4 and music_played==0 then
-		music(8)
-		music_played=8
-	end
+function play_main_music()
+	music(0)
 end
 -->8
 --pnj
@@ -382,7 +378,6 @@ function create_pnj4()
 	  name="leo le ceo"}  
 end
 
-
 function answer_to_pnj(pnj_id)
 
 --pnj 1
@@ -393,8 +388,6 @@ function answer_to_pnj(pnj_id)
 			create_asw("au revoir")
 		end
 	end
-	
---pnj 2
 	if pnj_id==2 then 
 		if c2.deja_parle<2 then
 			create_asw("emprunter 500 (-50)","emprunter 1000 (-100)",
@@ -418,10 +411,15 @@ function answer_to_pnj(pnj_id)
 		 create_asw("leur balancer un \n   cocktail molotov","","s'enfuir")
 		end
 	end
-		
---pnj4
+
+--pnj 4
 	if pnj_id==4 then
-		
+		if c4.deja_parle==0 then
+		 create_asw("demander un travail","offrir son aide","parler des arbres morts","parler de la pollution")
+		end
+		if c4.deja_parle==1 then
+			create_asw("proposer son aide","l'enfermer dans un bidon toxique","le jeter dans la riviere","tout bruler")
+		end
 	end
 end
 
@@ -496,6 +494,20 @@ function answer_consequence(n)
 			elseif n==3 then
 				p.x=60
 				p.y=10
+			end
+		end
+	end
+
+--pnj 4
+	if pnj_id==4 then
+		if c4.deja_parle==0 then
+			c4.deja_parle=1
+			interact_with_pnj(newx,newy)
+  elseif c4.deja_parle==1 then
+			if n==1 then
+				interact_with_pnj(newx,newy)
+			else
+				win=true
 			end
 		end
 	end
@@ -649,17 +661,9 @@ __sfx__
 001200002d1222410224102241022d1222d1222d1222d12226122241022410224102281222812228122281222d1222410224102241022d1222d1222d1222d122261222410229122241022c1222c1222c1222c122
 000600000a4500d65013650064500b4000a4000b70000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000002605025050240502305024050250502505025050250502405024050230502305000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-001500001525015230172501723018250182301525017250172301825018230152301725017230182501823011250112301325013230152501523011250132501323015250152301325018250182301725017230
-001500000943509435094350943509435094350943509435094350943509435094350943509435094350943505435054350543505435054350543505435054350743507435074350743507435074350743507435
 __music__
 01 01020344
 00 01020344
+00 01020344
 02 01040644
-02 01040644
-00 41424344
-00 41424344
-00 41424344
-00 41424344
-03 0a0b4344
 
