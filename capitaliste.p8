@@ -68,7 +68,7 @@ end
 --player
 
 function create_player()
-	p={x=40,y=11,
+	p={x=57,y=4,
 	   sprite=39,
 	   dettes=-3520,
 	   vies=3,
@@ -319,6 +319,14 @@ function interact_with_pnj(x,y)
 	 	create_msg(c3.name,"maintenant embarque moi ca !")
 	 end
 	end
+	
+--pnj 4
+	if x==c4.x and y==c4.y then
+		pnj_id=4
+		if c4.deja_parle==0 then 
+		 create_msg(c4.name,"qui etes vous ?","je ne reponds pas \naux journalistes \nislamo-gauchiste, \ncirculez !")
+		end
+	end
 end
 -->8
 --music
@@ -332,6 +340,7 @@ function create_pnj()
 	create_pnj1()
 	create_pnj2()
 	create_pnj3()
+	create_pnj4()
 end
 
 --bob le sdf
@@ -357,6 +366,14 @@ function create_pnj3()
 		name="bernard renault"}
 end
 
+--leo le ceo
+function create_pnj4()
+	c4={x=57,y=2,
+	    deja_parle=0,
+	  name="leo le ceo"}  
+end
+
+
 function answer_to_pnj(pnj_id)
 
 --pnj 1
@@ -367,6 +384,8 @@ function answer_to_pnj(pnj_id)
 			create_asw("au revoir")
 		end
 	end
+	
+--pnj 2
 	if pnj_id==2 then 
 		if c2.deja_parle<2 then
 			create_asw("emprunter 500 (-50)","emprunter 1000 (-100)",
@@ -389,6 +408,11 @@ function answer_to_pnj(pnj_id)
 		elseif c3.deja_parle==4 then
 		 create_asw("leur balancer un \n   cocktail molotov","","s'enfuir")
 		end
+	end
+		
+--pnj4
+	if pnj_id==4 then
+		
 	end
 end
 
